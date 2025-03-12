@@ -1,0 +1,36 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "93d57ab624168e0e6d0f145d19b25f21"
+application_url = "https://ukraine-constraints-til-used.trycloudflare.com"
+embedded = true
+name = "qr-app"
+handle = "qr-app-147"
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2025-01"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://ukraine-constraints-til-used.trycloudflare.com/auth/callback",
+  "https://ukraine-constraints-til-used.trycloudflare.com/auth/shopify/callback",
+  "https://ukraine-constraints-til-used.trycloudflare.com/api/auth/callback"
+]
+
+[pos]
+embedded = false
