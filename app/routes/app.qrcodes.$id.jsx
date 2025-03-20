@@ -9,6 +9,7 @@ import {
   useSubmit,
 } from "@remix-run/react";
 import { useState } from "react";
+import { Layout, Page } from "@shopify/polaris";
 
 export async function loader({ request, params }) {
   const { admin } = await authenticate.admin(request); // if the user is authenticated, then the method returns an admin object if not, then it handles the necessasry redirects
@@ -76,6 +77,16 @@ export default function QRCodeForm() {
 
   return (
     <>
+    <Page>
+      <ui-title-bar title={qrCode.id ? "Edit QR Code" : "Create New QR Code"}>
+          <button onClick={navigate('/app')} variant="breadcrumb">QR Codes</button>       
+        </ui-title-bar> 
+        <Layout>
+          <Layout.Section>
+            
+          </Layout.Section>
+        </Layout>
+    </Page>
     </>
   )
 }
