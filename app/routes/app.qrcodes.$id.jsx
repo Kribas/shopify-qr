@@ -9,7 +9,7 @@ import {
   useSubmit,
 } from "@remix-run/react";
 import { useState } from "react";
-import { Layout, Page } from "@shopify/polaris";
+import { BlockStack, Button, Card, InlineError, InlineStack, Layout, Page, Text, TextField } from "@shopify/polaris";
 
 export async function loader({ request, params }) {
   const { admin } = await authenticate.admin(request); // if the user is authenticated, then the method returns an admin object if not, then it handles the necessasry redirects
@@ -41,10 +41,12 @@ export default function QRCodeForm() {
 
   const navigate = useNavigate();
 
-  const products = window.shopify.resourcePicker({
-    type: "product",
-    action: "select",
-  });
+  async function selectProduct() {
+    const product = await window.shopify.resourcePicker({
+      type: "product",
+      action: "select"
+    })
+  }
 
   if (products) {
     const { images, id, variants, title, handle } = products[0];
@@ -83,7 +85,50 @@ export default function QRCodeForm() {
         </ui-title-bar> 
         <Layout>
           <Layout.Section>
-            
+            <BlockStack gap="500">
+              <Card>
+                <BlockStack gap="500"> 
+                  <Text as="h2" variant="headingLg">Title</Text>
+                  <TextField
+                    id="title"
+                    label="title"
+                    helpText="Only store staff can see the title"
+                    labelHidden
+                    autoComplete="off"
+                    value={formState.title}
+                    onChange={() => setFormState({...formState, title})}
+                    error={errors.title}
+                  />
+                </BlockStack>
+              </Card>
+              <Card>
+                <BlockStack gap="500">
+                    <InlineStack align="space-between">
+                        <Text as="h2" variant="headingLg">Product</Text>
+
+                          {formState.productId ? (
+                            <Button variant="plain" onClick={selectProduct}>Change Product</Button>
+                          ) : null}
+
+                    </InlineStack>
+                    {formState.productId ? (
+                     <InlineStack>
+
+                     </InlineStack> 
+                    ): (
+                      <BlockStack gap="500">
+                        <Button variant="plain" onClick={selectProduct}>Select Product</Button>
+                        {errors.productId && (
+                          <InlineError
+                            message={errors.productId}
+                            fieldID="myFieldID"
+                          />
+                        )}
+                      </BlockStack>
+                    )}
+                </BlockStack>
+              </Card>
+            </BlockStack>
           </Layout.Section>
         </Layout>
     </Page>
