@@ -9,7 +9,8 @@ import {
   useSubmit,
 } from "@remix-run/react";
 import { useState } from "react";
-import { BlockStack, Button, Card, InlineError, InlineStack, Layout, Page, Text, TextField } from "@shopify/polaris";
+import { BlockStack, Button, Card, InlineError, InlineStack, Layout, Page, Text, TextField, Thumbnail } from "@shopify/polaris";
+import {ImageIcon} from '@shopify/polaris-icons'
 
 export async function loader({ request, params }) {
   const { admin } = await authenticate.admin(request); // if the user is authenticated, then the method returns an admin object if not, then it handles the necessasry redirects
@@ -113,7 +114,9 @@ export default function QRCodeForm() {
                     </InlineStack>
                     {formState.productId ? (
                      <InlineStack>
-
+                      <Thumbnail
+                        source={formState.productImage || ImageIcon}
+                      />
                      </InlineStack> 
                     ): (
                       <BlockStack gap="500">
