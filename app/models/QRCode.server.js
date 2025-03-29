@@ -1,5 +1,6 @@
 import db from '../db.server'
 import qrCode from 'qrcode'
+import invariant from ''
 
 
 export async function getQRCode(id, graphql) {
