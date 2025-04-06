@@ -1,6 +1,6 @@
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
-import { getQRCode } from "../models/QRCode.server";
+import { getQRCode, validateQRCode } from "../models/QRCode.server";
 import {
   useActionData,
   useLoaderData,
@@ -27,6 +27,7 @@ import {
   Thumbnail,
 } from "@shopify/polaris";
 import { ImageIcon } from "@shopify/polaris-icons";
+import { db } from "../db.server";
 
 export async function loader({ request, params }) {
   const { admin } = await authenticate.admin(request); // if the user is authenticated, then the method returns an admin object if not, then it handles the necessasry redirects
@@ -39,6 +40,34 @@ export async function loader({ request, params }) {
   }
 
   return json(await getQRCode(Number(params.id), admin.graphql));
+}
+
+export async function action({ request, params }) {
+  const { session } = await authenticate.admin(request);
+  const { shop } = session;
+
+  const data = {
+    ...Object.fromEntries(await request.formData()),
+    shop,
+  };
+  console.log("DATA", data);
+
+  if (data.action == "delete") {
+    await db.qRCode.delete({ where: { id: Number(params.id) } });
+    return redirect("/app");
+  }
+
+  const errors = validateQRCode(data);
+
+  if (errors) {
+    return json({ errors }, { status: 422 });
+  }
+
+  const qrCode =
+    params.id == "new"
+      ? await db.qRCode.create({ data })
+      : await db.qRCode.update({ where: { id: Number(params.id) }, data });
+  return redirect(`/app/qrcodes/${qrCode.id}`)
 }
 
 export default function QRCodeForm() {
@@ -240,21 +269,20 @@ export default function QRCodeForm() {
             <PageActions
               secondaryActions={[
                 {
-                  content:"Delete",
+                  content: "Delete",
                   loading: isDeleting,
                   disabled: !qrCode.id || !qrCode || isSaving || isDeleting,
                   destructive: true,
                   outline: true,
-                  onAction: () => submit({action: "delete"}, {method: "POST"})
-                }
+                  onAction: () =>
+                    submit({ action: "delete" }, { method: "POST" }),
+                },
               ]}
-              primaryAction = {{
-                
-                  content: "Save",
-                  loading: isSaving,
-                  disabled: !isDirty || isSaving || isDeleting,
-                  onAction: handleSave
-                
+              primaryAction={{
+                content: "Save",
+                loading: isSaving,
+                disabled: !isDirty || isSaving || isDeleting,
+                onAction: handleSave,
               }}
             />
           </Layout.Section>

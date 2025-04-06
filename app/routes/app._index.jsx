@@ -14,11 +14,15 @@ import {
 } from "@shopify/polaris";
 import { TitleBar, useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
+import { getQRCodes } from "../models/QRCode.server";
 
 export const loader = async ({ request }) => {
-  await authenticate.admin(request);
+  const {admin, session} = await authenticate.admin(request)
+  const qrCodes = await getQRCodes(session.shop, admin.graphql)
 
-  return null;
+  return json({
+    qrCodes
+  })
 };
 
 export const action = async ({ request }) => {

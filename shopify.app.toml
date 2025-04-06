@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "93d57ab624168e0e6d0f145d19b25f21"
-application_url = "https://stated-soma-required-skip.trycloudflare.com"
+application_url = "https://changed-bulgaria-recently-loop.trycloudflare.com"
 embedded = true
 name = "qr-app"
 handle = "qr-app-147"
@@ -27,9 +27,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://stated-soma-required-skip.trycloudflare.com/auth/callback",
-  "https://stated-soma-required-skip.trycloudflare.com/auth/shopify/callback",
-  "https://stated-soma-required-skip.trycloudflare.com/api/auth/callback"
+  "https://changed-bulgaria-recently-loop.trycloudflare.com/auth/callback",
+  "https://changed-bulgaria-recently-loop.trycloudflare.com/auth/shopify/callback",
+  "https://changed-bulgaria-recently-loop.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
