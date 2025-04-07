@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, Link } from "@remix-run/react";
 import {
   Page,
   Layout,
@@ -11,10 +11,15 @@ import {
   List,
   Link,
   InlineStack,
+  EmptyState,
+  IndexTable,
+  Thumbnail,
+  Icon,
 } from "@shopify/polaris";
 import { TitleBar, useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { getQRCodes } from "../models/QRCode.server";
+import {AlertDiamondIcon, ImageIcon} from '@shopify/polaris-icons'
 
 export const loader = async ({ request }) => {
   const {admin, session} = await authenticate.admin(request)
@@ -107,6 +112,79 @@ export default function Index() {
     }
   }, [productId, shopify]);
   const generateProduct = () => fetcher.submit({}, { method: "POST" });
+
+  const truncate = (str, {length = 25} = {}) => {
+    if(!str) return ""
+    if(str.length <= length) return str
+    return str.slice(0, length) + "..."
+  }
+
+  const EmptyQrCodeState = ({onAction}) => (
+    <EmptyState
+      heading="Create unique QR codes for your product"
+      action={{
+        content: "Create QR Code",
+        onAction
+      }}
+      image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+    >
+      <p>Allow customers to scan code and buy product through their phone.</p>
+    </EmptyState>
+  )
+
+  const QRTable = ({qrCodes}) => (
+    <IndexTable
+      resourceName={{
+        singular: 'QR Code',
+        plural: "QR Codes"
+      }}
+      itemCount={qrCodes.length}
+      headings={[
+        {title: 'Thumbnail', hidden: true},
+        {title: "Title"},
+        {title: "Product"},
+        {title: "Date Created"},
+        {title: "Scans"}
+      ]}
+      selectable={false}
+    >
+      {qrCodes.map((qrCode) => (
+        <QRTableRow key={qrCode.id} qrCode = {qrCode}/>
+      ))}
+    </IndexTable>
+  )
+
+  const QRTableRow = ({qrCode}) => {
+    <IndexTable.Row id={qrCode.id} position={qrCode.id}>
+      <IndexTable.Cell>
+        <Thumbnail
+          source={qrCode.prodcutImage || ImageIcon}
+          alt={qrCode.productTitle}
+          size="small"
+        />
+      </IndexTable.Cell>
+      <IndexTable.Cell>
+          <Link to={`qrcodes/${qrCode.id}`}>{truncate(qrCode.title)}</Link>
+      </IndexTable.Cell>
+      <IndexTable.Cell>
+        {qrCode.productDeleted ? (
+          <InlineStack align="start" gap="200">
+            <span style={{width: "20px"}}>
+              <Icon source={AlertDiamondIcon} tone="critical"/>
+            </span>
+            <Text tone="critical" as="span">
+              product has been deleted
+            </Text>
+          </InlineStack>
+        ) : (
+          truncate(qrCode.title)
+        )}
+      </IndexTable.Cell>
+      <IndexTable.Cell>
+        
+      </IndexTable.Cell>
+    </IndexTable.Row>
+  }
 
   return (
     <Page>
