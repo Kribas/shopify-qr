@@ -3,7 +3,8 @@ import { getQRCode } from '../models/QRCode.server'
 import {authenticate} from '../shopify.server'
 import {data} from '@remix-run/node'
 import { useState } from 'react'
-import { Button, Page } from '@shopify/polaris'
+import { Bleed, BlockStack, Button, Card, Divider, InlineError, InlineStack, Layout, Page, Text, TextField, Thumbnail } from '@shopify/polaris'
+import {ImageIcon} from '@shopify/polaris-icons'
 
 export async function loader({request, params}) {
     const {admin} = await authenticate.admin(request)
@@ -16,6 +17,10 @@ export async function loader({request, params}) {
     }
 
     return data(await getQRCode(Number(params.id), admin.graphql))
+}
+
+export async function action({request, params}) {
+
 }
 
 export default function QRCodeForm() {
@@ -73,6 +78,45 @@ export default function QRCodeForm() {
             <ui-title-bar title={qrCode?.id ? "Edit QR code" : "Create New QR Code"}>
                 <button onClick={navigate("/app")} variant='breadcrumb'>QR codes</button>
             </ui-title-bar>
+            <Layout>
+                <Layout.Section>
+                    <BlockStack gap="500">
+                        <Card>
+                            <BlockStack gap="500">
+                                <Text as='h2' variant='headingLg'>Title</Text>
+
+                                <TextField id='title' onChange={(title) => setFormState({...formState, title})} label="title" labelHidden autoComplete='off' value={formState?.title} error={errors?.title} helpText="Only store staff can see this title"/>
+
+                            </BlockStack>
+                        </Card>
+                        <Card>
+                            <InlineStack align='space-between'>
+                                <Text as='h2' variant='headingLg'>Product</Text>
+                                {formState?.productId ? (<Button onClick={selectProduct}>Change Product</Button>) : null}
+                            </InlineStack>
+                            {formState?.productId ? (<InlineStack blockAlign='center' gap="500">
+                                <Thumbnail
+                                    source={formState?.productImage || ImageIcon}
+                                    alt={formState?.productAlt}
+                                />
+                                <Text as='span' variant='headingMd' fontWeight='semibold'>{formState?.productTitle}</Text>
+                            </InlineStack>) : (
+                                <BlockStack gap="200">
+                                    <Button onClick={selectProduct} id='select-product'>Select Product</Button>
+                                    {errors?.productId ? (
+                                        <InlineError message={errors.productId} fieldID='myFieldID'/>
+                                    ) : null}
+                                </BlockStack>
+                            )}
+                            
+                        </Card>
+                        <Bleed marginInlineStart="200" marginInlineEnd="200">
+                                <Divider/>
+                            </Bleed>
+                            
+                    </BlockStack>
+                </Layout.Section>
+            </Layout>
         </Page>
     )
     
