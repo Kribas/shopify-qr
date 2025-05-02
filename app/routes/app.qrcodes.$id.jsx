@@ -73,6 +73,9 @@ export default function QRCodeForm() {
         submit(data, {method: "POST"})
     }
 
+    console.log('Initial Commit');
+    
+
     return (
         <Page>
             <ui-title-bar title={qrCode?.id ? "Edit QR code" : "Create New QR Code"}>
