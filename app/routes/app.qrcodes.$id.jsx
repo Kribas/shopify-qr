@@ -73,7 +73,6 @@ export default function QRCodeForm() {
         submit(data, {method: "POST"})
     }
 
-    console.log('Initial Commit');
     
 
     return (
