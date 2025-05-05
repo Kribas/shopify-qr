@@ -47,6 +47,9 @@ export async function action({ request, params }) {
     
 }
 
+console.log('Initial commit');
+
+
 export default function QRCodeForm() {
   const errors = useActionData()?.errors || {};
   const qrCode = useLoaderData();
