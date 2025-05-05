@@ -106,8 +106,9 @@ export default function Index() {
   const generateProduct = () => fetcher.submit({}, { method: "POST" });
 
   return (
-    <Page>
-      <QRCodeForm/>
-    </Page>
+    <> 
+            {/* <QRCodeForm/> */}
+
+    </>
   );
 }
