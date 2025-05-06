@@ -63,7 +63,6 @@ export async function action({ request, params }) {
   
 }
 
-console.log('Initial commit');
 
 
 
