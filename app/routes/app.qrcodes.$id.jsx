@@ -5,9 +5,9 @@ import {
   useNavigation,
   useSubmit,
 } from "@remix-run/react";
-import { getQRCode } from "../models/QRCode.server";
+import { getQRCode, validateQrCode } from "../models/QRCode.server";
 import { authenticate } from "../shopify.server";
-import { data } from "@remix-run/node";
+import { data,redirect } from "@remix-run/node";
 import { useState } from "react";
 import {
   Bleed,
@@ -44,7 +44,23 @@ export async function loader({ request, params }) {
 export async function action({ request, params }) {
     const {session} = await authenticate.admin(request)
     const {shop} = session
-    
+
+    const data = {...Object.fromEntries(await request.formData()), shop}
+    if(data.action == 'delete') {
+      await db.qRCode.delete({where: {id: Number(params.id)}})
+      return redirect("/app")
+    }
+
+    const errors = validateQrCode(data)
+
+    if(errors) {
+      return data({errors}, {status: 422})
+    }
+
+    const qrCode = params.id == 'new' ? db.qRCode.create({data}) : db.qRCode.update({where: {id: Number(params.id)}, data})
+
+    return redirect(`app/qrcodes/${qrCode.id}`)
+  
 }
 
 
