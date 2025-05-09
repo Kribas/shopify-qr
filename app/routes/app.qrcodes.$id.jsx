@@ -118,7 +118,7 @@ export default function QRCodeForm() {
   return (
     <Page>
       <ui-title-bar title={qrCode?.id ? "Edit QR code" : "Create New QR Code"}>
-        <button onClick={navigate("/app")} variant="breadcrumb">
+        <button onClick={() => navigate("/app")} variant="breadcrumb">
           QR codes
         </button>
       </ui-title-bar>

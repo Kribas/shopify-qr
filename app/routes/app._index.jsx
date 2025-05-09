@@ -1,7 +1,7 @@
 import {AlertDiamondIcon, ImageIcon} from '@shopify/polaris-icons'
 import { authenticate } from '../shopify.server';
 import { getQRCodes } from '../models/QRCode.server';
-import { data } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { EmptyState, Icon, IndexTable, InlineStack, Thumbnail, Text, Page, Button, Layout, Card } from '@shopify/polaris';
 import {Link, useLoaderData, useNavigate} from '@remix-run/react'
 
@@ -10,7 +10,7 @@ export async function loader({request}) {
   const {admin,session} = await authenticate.admin(request)
   const qrCodes = await getQRCodes(session.shop, admin.graphql)
 
-  return data({
+  return json({
     qrCodes
   })
 }
@@ -85,17 +85,20 @@ export default function Index() {
   const navigate = useNavigate()
   const qrCodes = useLoaderData()
 
+  console.log('QR CODES--------------', qrCodes);
+  
+
   return (
     <Page> 
       <ui-title-bar title='QR Codes'><button onClick={() => navigate("/app/qrcodes/new")} variant='primary'>Create QR Code</button></ui-title-bar>
       <Layout>
         <Layout.Section>
           <Card padding='0'>
-            {/* {qrCodes.length === 0 ? (
+            {qrCodes.qrCodes.length === 0 ? (
               <EmptyQRCodes onAction={() => navigate('qrcodes/new')}/>
             ) : (
               <QrTable qrCodes={qrCodes}/>
-            )} */}
+            )}
           </Card>
         </Layout.Section>
       </Layout>
