@@ -16,6 +16,8 @@ export async function getQRCodes(shop, graphql) {
     orderBy: { id: "desc" },
   });
 
+  if(qrCodes.length === 0) return []
+
   return Promise.all(
     qrCodes.map((qrCode) => supplimentQrCode(qrCode, graphql)),
   );
