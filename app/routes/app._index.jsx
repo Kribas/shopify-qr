@@ -32,7 +32,7 @@ const QrTable = ({qrCodes}) => (
   <IndexTable
     resourceName={{
       singular: 'QR Code',
-      plural: 'QR Codes'
+      plural: 'QR code'
     }}
     itemCount={qrCodes.length}
     headings={[
@@ -44,13 +44,13 @@ const QrTable = ({qrCodes}) => (
     ]}
     selectable={false}
   >
-    {qrCodes.qrCodes.map((qrCode) => (
+    {qrCodes.map((qrCode) => (
       <QRTableRow key={qrCode.id} qrCode={qrCode}/>
     ))}
   </IndexTable>
 )
 
-function truncate(str, {length = 25}) {
+function truncate(str, {length = 25}={}) {
   if(!str) return ''
   if(str.length < length) return str
   return str.slice(0, length) + '...'
@@ -75,7 +75,7 @@ const QRTableRow = ({qrCode}) => (
       </InlineStack>) : (truncate(qrCode?.productTitle))}
     </IndexTable.Cell>
     <IndexTable.Cell>
-      {new Date(qrCode.createdAt()).toDateString()}
+      {new Date(qrCode.createdAt).toDateString()}
     </IndexTable.Cell>
     <IndexTable.Cell>{qrCode.scans}</IndexTable.Cell>
   </IndexTable.Row>
@@ -83,9 +83,9 @@ const QRTableRow = ({qrCode}) => (
 
 export default function Index() {
   const navigate = useNavigate()
-  const qrCodes = useLoaderData()
+  const {qrCodes} = useLoaderData()
 
-  console.log('QR CODES--------------', qrCodes);
+  console.log('QR CODES--------------', qrCodes.length);
   
 
   return (
@@ -94,7 +94,7 @@ export default function Index() {
       <Layout>
         <Layout.Section>
           <Card padding='0'>
-            {qrCodes.qrCodes.length === 0 ? (
+            {qrCodes.length === 0 ? (
               <EmptyQRCodes onAction={() => navigate('qrcodes/new')}/>
             ) : (
               <QrTable qrCodes={qrCodes}/>

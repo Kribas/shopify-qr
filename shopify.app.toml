@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5c305a26086dd3ac6819ad9d4977ebcc"
-application_url = "https://resort-rm-vast-solomon.trycloudflare.com"
+application_url = "https://plot-coding-chance-airports.trycloudflare.com"
 embedded = true
 name = "qrApp"
 handle = "qrapp-3"
@@ -27,9 +27,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://resort-rm-vast-solomon.trycloudflare.com/auth/callback",
-  "https://resort-rm-vast-solomon.trycloudflare.com/auth/shopify/callback",
-  "https://resort-rm-vast-solomon.trycloudflare.com/api/auth/callback"
+  "https://plot-coding-chance-airports.trycloudflare.com/auth/callback",
+  "https://plot-coding-chance-airports.trycloudflare.com/auth/shopify/callback",
+  "https://plot-coding-chance-airports.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

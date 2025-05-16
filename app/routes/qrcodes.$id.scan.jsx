@@ -9,7 +9,7 @@ export async function loader({params}) {
     invariant(params.id, 'Could not find QR Code destination')
     
     const id = Number(params.id)
-    const qrCode = await db.qRCode.findFirsr({where: {id}})
+    const qrCode = await db.qRCode.findFirst({where: {id}})
 
     invariant(qrCode, 'Could not find QR Code destination')
 
