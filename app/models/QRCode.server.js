@@ -78,7 +78,7 @@ async function supplimentQrCode(qrCode, graphql) {
   };
 }
 
-export function validateQrCode(data) {
+export function validateQRCode(data) {
   const errors = {};
   if (!data.title) {
     errors.title = "Title is required";

@@ -2,6 +2,8 @@ import { data } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { getQRCodeImage } from "../models/QRCode.server";
 import { useLoaderData } from "@remix-run/react";
+import db from "../db.server";
+
 
 export async function loader({params}) {
     invariant(params.id,'Could not find qrCode destination')
