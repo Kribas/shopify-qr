@@ -85,7 +85,6 @@ export default function Index() {
   const navigate = useNavigate()
   const {qrCodes} = useLoaderData()
 
-  console.log('QR CODES--------------', qrCodes.length);
   
 
   return (
